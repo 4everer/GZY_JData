@@ -17,3 +17,10 @@ To download data:
 ipython notebook for data exploration and data transformation
 
 package used: pandas, numpy, matplotlib, sklearn
+
+## Strategy
+
+First predict customers that will make a purchase.
+Then use their history to predict products that they will get.
+
+
