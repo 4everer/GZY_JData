@@ -23,4 +23,28 @@ package used: pandas, numpy, matplotlib, sklearn
 First predict customers that will make a purchase.
 Then use their history to predict products that they will get.
 
+## Algorithm: Expectation-Maximization based max likelihood estimation, using mini-batch
+
+### Model
+Users can be classified into $m$ groups, with unique parameters for each group.
+
+User behavior follows poisson distribution, for behavior type $i$, the poisson intensity for group $j$ is $\lambda_ji$.
+P(behavior|user in group j) is the corresponding poisson probability.
+
+Assuming that the prior probability for a user in any group is equal, then Bayesian probability for user in group j is given as,
+$$ P(user in group j|behavior) = \frac{P(behavior|user in group j)}{\sum_k {P(behavior|user in group k)}} $$
+
+Assuming that the effect of an action generates an exponential impulse of $e^{-\lambda_ji}$, then the probability for purchase at a time point is
+$$ P(purchase) = \sum_i {P(purchase|behavior i) * \sum {behavior * impulse}} $$
+
+
+### Algorithm
+The algorithm alternatively updates P(purchase|behavior i) or $\lamda_ji$. The group for users in a mini-batch is determined by probability calculated from $\lambda$.
+
+Update is performed with momentum $\mu$ to reduce the effect of noise.
+
+Test is performed at every 100 iterations, to evaulate error.
+
+
+
 
