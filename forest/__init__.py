@@ -10,5 +10,5 @@ import os
 import math
 import numpy as np
 import random
-from customScorer import JDcustomScorer
+from scorer import *
 from train import *
