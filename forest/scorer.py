@@ -9,9 +9,9 @@ def score_func(label, prediction, recall_precision_ratio=1.0):
     recall = correct / (np.sum(label) + 1e-6) + 1e-6
     return (1 + recall_precision_ratio) * recall * precision \
         / (recall_precision_ratio * recall + precision)
-#    F11 = 6 * recall * precision / (5 * recall + precision)
-#    F12 = 5 * recall * precision / (2 * recall + 3 * precision)
-#    Score = 0.4 * F11 + 0.6 * F12
-#    return Score
 
 default_scorer = make_scorer(score_func, greater_is_better=True)
+recall_scorer = make_scorer(score_func, greater_is_better=True,
+                            recall_precision_ratio=2.0)
+precision_scorer = make_scorer(score_func, greater_is_better=True,
+                               recall_precision_ratio=0.5)
