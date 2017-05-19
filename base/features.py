@@ -11,9 +11,15 @@ import random
 class UserTrainSet(Action):
     
     def __init__(self, user_data='data/user_simple.npy', 
-                 action_data='data/action_simple.npy'):
+                 action_data='data/action_simple.npy',
+                 product_cate=None):
         self.users = User(user_data)
         Action.__init__(self, action_data)
+        if product_cate is not None:
+            self.data = self.data[self['cate'] == product_cate, :]
+        decart = np.array(self['type'] == self.TYPE_DECART, dtype=int)
+        self.cart = np.array(self['type'] == self.TYPE_CART, dtype=int)
+        self.cart -= decart
 
     def get_user_action(self, header, action_type, start_time, end_time):
         raw_data = self.data[np.logical_and(self['time'] > start_time,
@@ -22,6 +28,21 @@ class UserTrainSet(Action):
         data = pd.DataFrame({'user_id': raw_data[mask, self.get_column('user_id')],
                              header: np.ones(np.sum(mask), dtype=int)})
         data_sum = data.groupby('user_id')[header].sum()
+        return data_sum
+    
+    def get_user_cart(self, header, start_time, end_time, first=False):
+        mask = np.logical_and(self['time'] > start_time,
+                              self['time'] < end_time)
+        user_id = self.data[mask, self.get_column('user_id')]
+        cart_data = self.cart[mask]
+        mask = cart_data != 0
+        data = pd.DataFrame({'user_id': user_id[mask],
+                             header: cart_data[mask]})
+        data_group = data.groupby('user_id')[header] 
+        data_sum = data_group.sum()
+        if first:
+            data_check = np.array(data_group.first() == -1, dtype=int)
+            data_sum += data_check
         return data_sum
     
     def get_all_data(self, start_time, end_time, 

@@ -29,6 +29,11 @@ class DataHolder(object):
         col = self.get_column(key)
         return self.data[:, col]
         
+    def get_columns(self):
+        col = self.columns.items()
+        col.sort(key=lambda x: x[1])
+        col = [_[0] for _ in col]
+        return col
         
     
 
@@ -37,3 +42,4 @@ from actions import *
 from products import *
 from comments import *
 from features import *
+from classifier import *

@@ -21,12 +21,12 @@ class ForestTrainer(object):
 #              'criterion': ['gini', 'entropy'],
 #              'max_features': ['log2'],
 #            'class_weight': [{0:1, 1:x} for x in np.logspace(1.8, 1.95, 16)]}
-    def train(self, train_data, train_label, scorer=default_scorer):
+    def train(self, train_data, train_label, scorer=default_scorer, n_jobs=-1):
         t0 = time.time()
         self.clf_randomCV = RandomizedSearchCV(self.clf, 
                                         param_distributions=self.param_dict,
                                         n_iter=100, scoring=scorer,
-                                        cv=3, n_jobs=-1)
+                                        cv=3, n_jobs=n_jobs)
         self.clf_randomCV.fit(train_data, train_label)
 
         print time.time() - t0
